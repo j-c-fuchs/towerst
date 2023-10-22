@@ -10,6 +10,10 @@ use ratatui::{
     widgets::Paragraph,
 };
 
+use crate::game::Game;
+
+mod game;
+
 struct UI {
     pub(crate) stdout: Stdout,
     pub(crate) terminal: Terminal<CrosstermBackend<Stdout>>,
@@ -34,6 +38,13 @@ impl UI {
     fn show_hello(&mut self) -> Result<()> {
         self.terminal
             .draw(|frame| frame.render_widget(Paragraph::new("Hello, World!"), frame.size()))?;
+        Ok(())
+    }
+
+    fn show_game(&mut self, game: &Game) -> Result<()> {
+        let widget = game.render();
+        self.terminal
+            .draw(|frame| frame.render_widget(widget, frame.size()))?;
         Ok(())
     }
 
@@ -64,8 +75,9 @@ impl Drop for UI {
 
 fn main() -> Result<()> {
     let mut ui = UI::create()?;
+    let game = Game::empty((5usize, 5usize));
     loop {
-        ui.show_hello()?;
+        ui.show_game(&game)?;
         if ui.handle_keypress()? {
             break;
         }
