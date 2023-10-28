@@ -12,6 +12,7 @@ use ratatui::{
 
 use crate::game::Game;
 
+mod app;
 mod event;
 mod game;
 
