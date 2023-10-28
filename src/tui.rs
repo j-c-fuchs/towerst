@@ -1,4 +1,4 @@
-use std::{io::Stdout, time::Duration};
+use std::{io::Stdout, panic, time::Duration};
 
 use anyhow::Result;
 use crossterm::{
@@ -33,6 +33,12 @@ impl Tui {
     }
 
     fn init(&mut self) -> Result<()> {
+        let panic_hook = panic::take_hook();
+        panic::set_hook(Box::new(move |panic| {
+            Self::reset().expect("failed to reset the terminal");
+            panic_hook(panic);
+        }));
+
         execute!(self.stdout, EnterAlternateScreen)?;
         terminal::enable_raw_mode()?;
         self.terminal.clear()?;
@@ -44,16 +50,14 @@ impl Tui {
         Ok(())
     }
 
-    fn cleanup(&mut self) -> Result<()> {
-        self.terminal.clear()?;
+    fn reset() -> Result<()> {
         terminal::disable_raw_mode()?;
-        execute!(self.stdout, LeaveAlternateScreen)?;
+        execute!(std::io::stdout(), LeaveAlternateScreen)?;
         Ok(())
     }
-}
 
-impl Drop for Tui {
-    fn drop(&mut self) {
-        let _ = self.cleanup();
+    fn cleanup(&mut self) -> Result<()> {
+        self.terminal.clear()?;
+        Self::reset()
     }
 }
