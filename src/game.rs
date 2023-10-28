@@ -27,6 +27,7 @@ impl<T: Into<usize>> From<(T, T)> for Size {
     }
 }
 
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Game {
     size: Size,
     constraints: Vec<Option<usize>>,
