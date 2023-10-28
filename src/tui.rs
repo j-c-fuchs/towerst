@@ -8,8 +8,8 @@ use crossterm::{
 };
 use ratatui::{prelude::CrosstermBackend, widgets::Paragraph};
 
-use crate::event::EventHandler;
 use crate::game::Game;
+use crate::{app::App, event::EventHandler, ui};
 
 pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<Stdout>>;
 pub type Terminal = ratatui::Terminal<CrosstermBackend<Stdout>>;
@@ -63,6 +63,11 @@ impl Tui {
             }
         }
         Ok(false)
+    }
+
+    pub fn draw(&mut self, app: &mut App) -> Result<()> {
+        self.terminal.draw(|frame| ui::render(app, frame))?;
+        Ok(())
     }
 
     fn cleanup(&mut self) -> Result<()> {
