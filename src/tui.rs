@@ -31,17 +31,21 @@ impl Tui {
     }
 
     pub fn init(&mut self) -> Result<()> {
-        let panic_hook = panic::take_hook();
-        panic::set_hook(Box::new(move |panic| {
-            Self::reset().expect("failed to reset the terminal");
-            panic_hook(panic);
-        }));
+        Self::initialize_panic_handler();
 
         execute!(self.stdout, EnterAlternateScreen)?;
         terminal::enable_raw_mode()?;
         self.terminal.clear()?;
         self.terminal.hide_cursor()?;
         Ok(())
+    }
+
+    fn initialize_panic_handler() {
+        let original_panic_hook = panic::take_hook();
+        panic::set_hook(Box::new(move |panic_info| {
+            Self::reset().expect("failed to reset the terminal");
+            original_panic_hook(panic_info);
+        }));
     }
 
     pub fn draw(&mut self, app: &mut App) -> Result<()> {
