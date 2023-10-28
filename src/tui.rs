@@ -40,6 +40,7 @@ impl Tui {
         execute!(self.stdout, EnterAlternateScreen)?;
         terminal::enable_raw_mode()?;
         self.terminal.clear()?;
+        self.terminal.hide_cursor()?;
         Ok(())
     }
 
@@ -55,7 +56,9 @@ impl Tui {
     }
 
     pub fn cleanup(&mut self) -> Result<()> {
+        Self::reset()?;
         self.terminal.clear()?;
-        Self::reset()
+        self.terminal.show_cursor()?;
+        Ok(())
     }
 }
