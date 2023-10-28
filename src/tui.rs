@@ -23,16 +23,14 @@ impl Tui {
         let stdout = std::io::stdout();
         let terminal = Terminal::new(CrosstermBackend::new(std::io::stdout()))?;
         let events = EventHandler::new(tick_rate);
-        let mut ui = Self {
+        Ok(Self {
             stdout,
             terminal,
             events,
-        };
-        ui.init()?;
-        Ok(ui)
+        })
     }
 
-    fn init(&mut self) -> Result<()> {
+    pub fn init(&mut self) -> Result<()> {
         let panic_hook = panic::take_hook();
         panic::set_hook(Box::new(move |panic| {
             Self::reset().expect("failed to reset the terminal");
@@ -56,7 +54,7 @@ impl Tui {
         Ok(())
     }
 
-    fn cleanup(&mut self) -> Result<()> {
+    pub fn cleanup(&mut self) -> Result<()> {
         self.terminal.clear()?;
         Self::reset()
     }
