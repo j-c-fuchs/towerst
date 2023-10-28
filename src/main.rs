@@ -3,6 +3,7 @@ use std::time::Duration;
 use anyhow::Result;
 
 use crate::app::App;
+use crate::event::Event;
 use crate::tui::Tui;
 
 mod app;
@@ -18,6 +19,9 @@ fn main() -> Result<()> {
     tui.init()?;
     while !app.should_quit {
         tui.draw(&mut app)?;
+        if let Event::Key(e) = tui.events.next()? {
+            app.handle_keypress(e);
+        }
     }
     tui.cleanup()?;
     Ok(())

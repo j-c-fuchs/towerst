@@ -1,3 +1,5 @@
+use crossterm::event::{KeyCode, KeyEvent, KeyEventKind};
+
 use crate::game::{Game, Size};
 
 #[derive(Debug)]
@@ -12,6 +14,18 @@ impl App {
             game: Game::empty(size),
             should_quit: false,
         }
+    }
+
+    pub fn handle_keypress(&mut self, key_event: KeyEvent) {
+        match key_event {
+            KeyEvent {
+                code: KeyCode::Char('q'),
+                modifiers,
+                kind: KeyEventKind::Press,
+                state,
+            } => self.quit(),
+            _ => {}
+        };
     }
 
     pub fn quit(&mut self) {
