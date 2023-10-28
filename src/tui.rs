@@ -56,9 +56,9 @@ impl Tui {
     }
 
     pub fn cleanup(&mut self) -> Result<()> {
-        Self::reset()?;
         self.terminal.clear()?;
         self.terminal.show_cursor()?;
+        Self::reset()?;
         Ok(())
     }
 }
