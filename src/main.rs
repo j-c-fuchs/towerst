@@ -1,7 +1,7 @@
 use std::io::{stdout, Result, Stdout};
 
 use crossterm::{
-    event::{self, KeyCode, KeyEventKind},
+    event::{self as ctevent, KeyCode, KeyEventKind},
     execute,
     terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -12,6 +12,7 @@ use ratatui::{
 
 use crate::game::Game;
 
+mod event;
 mod game;
 
 struct UI {
@@ -49,8 +50,8 @@ impl UI {
     }
 
     fn handle_keypress(&mut self) -> Result<bool> {
-        if event::poll(std::time::Duration::from_millis(100))? {
-            if let event::Event::Key(key) = event::read()? {
+        if ctevent::poll(std::time::Duration::from_millis(100))? {
+            if let ctevent::Event::Key(key) = ctevent::read()? {
                 if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
                     return Ok(true);
                 }
