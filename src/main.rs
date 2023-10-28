@@ -1,86 +1,22 @@
-use std::io::{stdout, Result, Stdout};
+use std::time::Duration;
 
-use crossterm::{
-    event::{self as ctevent, KeyCode, KeyEventKind},
-    execute,
-    terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
-};
-use ratatui::{
-    prelude::{CrosstermBackend, Terminal},
-    widgets::Paragraph,
-};
+use anyhow::Result;
 
 use crate::game::Game;
+use crate::tui::Tui;
 
 mod app;
 mod event;
 mod game;
-
-struct UI {
-    pub(crate) stdout: Stdout,
-    pub(crate) terminal: Terminal<CrosstermBackend<Stdout>>,
-}
-
-impl UI {
-    pub(crate) fn create() -> Result<Self> {
-        let terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
-        let stdout = stdout();
-        let mut ui = Self { stdout, terminal };
-        ui.init()?;
-        Ok(ui)
-    }
-
-    fn init(&mut self) -> Result<()> {
-        execute!(self.stdout, EnterAlternateScreen)?;
-        terminal::enable_raw_mode()?;
-        self.terminal.clear()?;
-        Ok(())
-    }
-
-    fn show_hello(&mut self) -> Result<()> {
-        self.terminal
-            .draw(|frame| frame.render_widget(Paragraph::new("Hello, World!"), frame.size()))?;
-        Ok(())
-    }
-
-    fn show_game(&mut self, game: &Game) -> Result<()> {
-        let widget = game.render();
-        self.terminal
-            .draw(|frame| frame.render_widget(widget, frame.size()))?;
-        Ok(())
-    }
-
-    fn handle_keypress(&mut self) -> Result<bool> {
-        if ctevent::poll(std::time::Duration::from_millis(100))? {
-            if let ctevent::Event::Key(key) = ctevent::read()? {
-                if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                    return Ok(true);
-                }
-            }
-        }
-        Ok(false)
-    }
-
-    fn cleanup(&mut self) -> Result<()> {
-        self.terminal.clear()?;
-        terminal::disable_raw_mode()?;
-        execute!(self.stdout, LeaveAlternateScreen)?;
-        Ok(())
-    }
-}
-
-impl Drop for UI {
-    fn drop(&mut self) {
-        let _ = self.cleanup();
-    }
-}
+mod tui;
 
 fn main() -> Result<()> {
-    let mut ui = UI::create()?;
+    let tick_rate = Duration::from_millis(100);
+    let mut tui = Tui::create(tick_rate)?;
     let game = Game::empty((5usize, 5usize));
     loop {
-        ui.show_game(&game)?;
-        if ui.handle_keypress()? {
+        tui.show_game(&game)?;
+        if tui.handle_keypress()? {
             break;
         }
     }
