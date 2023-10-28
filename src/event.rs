@@ -25,7 +25,8 @@ pub struct EventHandler {
 impl EventHandler {
     pub fn new(tick_rate: Duration) -> Self {
         let (sender, receiver) = mpsc::channel();
-        let handler = thread::spawn(move || main_loop(sender.clone(), tick_rate));
+        let cloned_sender = sender.clone();
+        let handler = thread::spawn(move || main_loop(cloned_sender, tick_rate));
         Self {
             sender,
             receiver,
