@@ -2,13 +2,11 @@ use std::{io::Stdout, time::Duration};
 
 use anyhow::Result;
 use crossterm::{
-    event::{self, KeyCode, KeyEventKind},
     execute,
     terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use ratatui::{prelude::CrosstermBackend, widgets::Paragraph};
+use ratatui::prelude::CrosstermBackend;
 
-use crate::game::Game;
 use crate::{app::App, event::EventHandler, ui};
 
 pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<Stdout>>;
@@ -39,30 +37,6 @@ impl Tui {
         terminal::enable_raw_mode()?;
         self.terminal.clear()?;
         Ok(())
-    }
-
-    fn show_hello(&mut self) -> Result<()> {
-        self.terminal
-            .draw(|frame| frame.render_widget(Paragraph::new("Hello, World!"), frame.size()))?;
-        Ok(())
-    }
-
-    pub fn show_game(&mut self, game: &Game) -> Result<()> {
-        let widget = game.render();
-        self.terminal
-            .draw(|frame| frame.render_widget(widget, frame.size()))?;
-        Ok(())
-    }
-
-    pub fn handle_keypress(&mut self) -> Result<bool> {
-        if event::poll(std::time::Duration::from_millis(100))? {
-            if let event::Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                    return Ok(true);
-                }
-            }
-        }
-        Ok(false)
     }
 
     pub fn draw(&mut self, app: &mut App) -> Result<()> {
