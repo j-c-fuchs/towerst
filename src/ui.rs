@@ -9,7 +9,7 @@ use crate::tui::Frame;
 pub fn render(app: &mut App, f: &mut Frame) {
     let mut constraints = Vec::new();
     constraints.push(Constraint::Min(1));
-    constraints.append(&mut vec![Constraint::Length(3); app.game.size().height]);
+    constraints.append(&mut vec![Constraint::Length(3); app.game.size()]);
     constraints.push(Constraint::Min(1));
     let chunks = Layout::default()
         .direction(Direction::Vertical)

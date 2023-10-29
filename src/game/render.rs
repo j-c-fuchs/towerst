@@ -7,13 +7,11 @@ use super::*;
 
 impl Game {
     pub fn render(&self) -> Vec<BarChart> {
-        (0..self.size.height)
-            .map(|row| self.render_row(row))
-            .collect()
+        (0..self.size).map(|row| self.render_row(row)).collect()
     }
 
     fn render_row(&self, row: usize) -> BarChart {
-        let data: Vec<_> = self.board[row * self.size.width..(row + 1) * self.size.width]
+        let data: Vec<_> = self.board[row * self.size..(row + 1) * self.size]
             .iter()
             .map(|tower| match tower {
                 Some(height) => (format!("{}", height), *height as u64),
@@ -30,6 +28,6 @@ impl Game {
             .bar_style(Style::new().green().on_black())
             .value_style(Style::new().black().on_green())
             .data(BarGroup::default().bars(&bars))
-            .max(self.size.width as u64)
+            .max(self.size as u64)
     }
 }
