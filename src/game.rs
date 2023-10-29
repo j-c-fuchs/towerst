@@ -1,3 +1,4 @@
+use rand::prelude::*;
 use ratatui::{
     prelude::{Alignment, Rect},
     widgets::{Block, BorderType, Borders, Paragraph},
@@ -43,6 +44,23 @@ impl Game {
             size,
             constraints: vec![None; 2 * (size.width + size.height) as usize],
             board: vec![None; (size.width * size.height) as usize],
+        }
+    }
+
+    // TODO: make Game correct
+    pub fn random<T: Into<Size>>(size: T) -> Self {
+        let mut rng = rand::thread_rng();
+        let size = size.into();
+        let constraints = (0..2 * (size.width + size.height))
+            .map(|_| Some(rng.gen_range(1..size.width + 1)))
+            .collect();
+        let board = (0..size.width * size.height)
+            .map(|_| Some(rng.gen_range(1..size.width + 1)))
+            .collect();
+        Self {
+            size,
+            constraints,
+            board,
         }
     }
 }
