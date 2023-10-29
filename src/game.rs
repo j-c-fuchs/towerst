@@ -1,7 +1,5 @@
 use rand::prelude::*;
 
-mod render;
-
 pub type Size = usize;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -23,6 +21,14 @@ impl Game {
 
     pub fn size(&self) -> Size {
         self.size
+    }
+
+    pub fn row(&self, row: usize) -> Option<&[Option<usize>]> {
+        if row < self.size {
+            Some(&self.board[row * self.size..(row + 1) * self.size])
+        } else {
+            None
+        }
     }
 
     // TODO: make Game correct
