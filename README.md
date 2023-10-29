@@ -1,4 +1,4 @@
-# Towerust
+# Towerst
 
 Towers puzzle for the terminal written in Rust.
 
