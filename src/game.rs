@@ -8,8 +8,8 @@ mod render;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Size {
-    width: usize,
-    height: usize,
+    pub width: usize,
+    pub height: usize,
 }
 
 impl From<Rect> for Size {
@@ -45,6 +45,10 @@ impl Game {
             constraints: vec![None; 2 * (size.width + size.height) as usize],
             board: vec![None; (size.width * size.height) as usize],
         }
+    }
+
+    pub fn size(&self) -> Size {
+        self.size
     }
 
     // TODO: make Game correct

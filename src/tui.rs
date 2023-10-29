@@ -9,7 +9,7 @@ use ratatui::prelude::CrosstermBackend;
 
 use crate::{app::App, event::EventHandler, ui};
 
-pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<Stdout>>;
+pub type Frame<'a> = ratatui::Frame<'a>;
 pub type Terminal = ratatui::Terminal<CrosstermBackend<Stdout>>;
 
 pub struct Tui {
