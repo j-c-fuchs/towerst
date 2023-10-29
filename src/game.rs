@@ -3,6 +3,8 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
+mod render;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Size {
     width: usize,
@@ -42,15 +44,5 @@ impl Game {
             constraints: vec![None; 2 * (size.width + size.height) as usize],
             board: vec![None; (size.width * size.height) as usize],
         }
-    }
-
-    pub fn render(&self) -> Paragraph<'_> {
-        Paragraph::new("game board")
-            .block(
-                Block::default()
-                    .borders(Borders::all())
-                    .border_type(BorderType::Rounded),
-            )
-            .alignment(Alignment::Center)
     }
 }
