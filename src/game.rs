@@ -31,6 +31,10 @@ impl Game {
         }
     }
 
+    pub fn board(&self) -> &Vec<Option<usize>> {
+        &self.board
+    }
+
     // TODO: make Game correct
     pub fn random<T: Into<Size>>(size: T) -> Self {
         let mut rng = rand::thread_rng();

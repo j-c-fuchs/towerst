@@ -10,9 +10,9 @@ use crate::tui::Tui;
 mod app;
 mod event;
 mod game;
-mod gamewidget;
 mod tui;
 mod ui;
+mod widgets;
 
 fn main() -> Result<()> {
     let tick_rate = Duration::from_millis(100);

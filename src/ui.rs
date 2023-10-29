@@ -1,8 +1,8 @@
 use ratatui::style::{Color, Style};
 
 use crate::app::App;
-use crate::gamewidget::GameWidget;
 use crate::tui::Frame;
+use crate::widgets::GameWidget;
 
 pub fn render(app: &mut App, f: &mut Frame) {
     let widget =
